@@ -5,7 +5,15 @@
 */
 
 function isAnagram(str1, str2) {
+  if (str1.length !== str2.length) {
+    return false;
+  }
 
+  function stringSort(str) {
+    return str.toLowerCase().split('').sort().join('');
+  }
+
+  return stringSort(str1) === stringSort(str2);
 }
 
 module.exports = isAnagram;
