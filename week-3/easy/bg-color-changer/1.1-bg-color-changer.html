@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+  <div>
+    <input type="text"></input>
+    <button onclick="addColor()">Add a color</button>
+  </div>
+  <div id="colors"></div>
+
+
+<script>
+  let counter = 0
+  function addColor() {
+    const inputEl = document.querySelector("input").value
+    const colorId = "color-" + counter;
+    // console.log(inputEl);
+    const btn = document.createElement("button")
+    btn.setAttribute("id", colorId)
+    btn.innerHTML = inputEl
+    btn.onclick = function() {
+      document.querySelector("#"+colorId).style.backgroundColor = inputEl;
+    }
+    btn.ondblclick = function() {
+    document.body.style.backgroundColor = inputEl;
+    };
+    document.querySelector("#colors").appendChild(btn);
+    counter += 1
+  }
+    
+</script>
+</body>
+</html>
