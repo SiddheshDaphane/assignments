@@ -16,6 +16,36 @@ setInterval(() => {
     numberOfRequestsForUser = {};
 }, 1000)
 
+function rateLimiter(req, res, next) {
+  const user = req.header('user-id');
+
+  if (!user) {
+    return res.status(400).json({ error: 'user-id is required'});
+  }
+
+  const currentTime = Date.now();
+
+  if (!numberOfRequestsForUser[user]) {
+    numberOfRequestsForUser[user] = { count: 1,
+    lastRequestTime: currentTime }; 
+  }
+
+  const userData = numberOfRequestsForUser[user];
+
+  if (currentTime - userData.lastRequestTime > 1000) {
+    numberOfRequestsForUser[user] = { count: 1, lastRequestTime: currentTime}
+    return next();
+  } else if (userData.count < 5) {
+    userData.count += 1;
+    return next();
+  } else {
+    return res.status(404).json({error: "Rate limit exceeded (max 5 req per sec)"})
+  }
+
+}
+
+app.use(rateLimiter);
+
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
 });
